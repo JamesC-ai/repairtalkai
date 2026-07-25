@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en" translate="no">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="google" content="notranslate" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>RepairTalkAI - private conflict conversation reflection</title>
+    <meta name="description" content="Review conflict wording locally, find friction and repair signals, and create a calmer next-conversation draft without uploading the text." />
+    <link rel="canonical" href="https://repair.pagecheckai.com/" />
+    <meta property="og:title" content="RepairTalkAI" />
+    <meta property="og:description" content="Private conversation pattern review and a practical repair draft for the next talk." />
+    <meta property="og:image" content="https://repair.pagecheckai.com/repair-conversation.png" />
+    <link rel="icon" href="/favicon.svg" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="RepairTalkAI home"><span class="brand-mark">R</span><span>RepairTalkAI</span></a>
+      <nav aria-label="Primary"><a href="#reflection">Reflection tool</a><a href="#offers">Repair packs</a><a href="/support.html">Support</a></nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <img src="/repair-conversation.png" alt="Two adults having a calm conversation at a kitchen table with a notebook" />
+        <div class="hero-shade"></div>
+        <div class="hero-copy">
+          <p class="eyebrow">Private conversation reflection</p>
+          <h1>See the pattern before the next conversation.</h1>
+          <p>Review the wording that raised tension, preserve genuine repair attempts, and draft one calmer next step. Your text stays in this browser.</p>
+          <a class="primary-button" href="#reflection">Reflect on a conversation</a>
+        </div>
+      </section>
+
+      <section class="tool-band" id="reflection">
+        <div class="tool-heading">
+          <div><p class="eyebrow">Free local tool</p><h2>Turn a heated exchange into a reviewable map.</h2></div>
+          <p>Paste only text you are comfortable processing on this device. Remove names and identifying details when they are not needed.</p>
+        </div>
+
+        <form id="reflectionForm" class="reflection-form">
+          <section class="input-panel">
+            <div class="section-title"><span>01</span><div><h3>Conversation context</h3><p>Speaker labels such as “Alex:” and “Jordan:” improve the report.</p></div></div>
+            <div class="select-row">
+              <label>Relationship
+                <select id="relationshipInput">
+                  <option value="partner">Partner</option>
+                  <option value="family">Family</option>
+                  <option value="friend">Friend</option>
+                  <option value="coworker">Coworker</option>
+                  <option value="other">Other relationship</option>
+                </select>
+              </label>
+              <label>Goal
+                <select id="goalInput">
+                  <option value="reconnect">Reconnect</option>
+                  <option value="clarify">Clarify meaning</option>
+                  <option value="apologize">Own my part</option>
+                  <option value="boundary">Set a boundary</option>
+                  <option value="plan">Agree on a plan</option>
+                </select>
+              </label>
+            </div>
+            <label>Conversation or account of what happened
+              <textarea id="conversationInput" rows="14" maxlength="18000" placeholder="Alex: You never listen when plans change.&#10;Jordan: I was overwhelmed and should have sent a message."></textarea>
+            </label>
+            <div class="form-actions">
+              <button class="secondary-button" id="loadDemo" type="button">Load demo</button>
+              <button class="text-button" id="clearAll" type="button">Clear</button>
+            </div>
+          </section>
+
+          <section class="draft-panel">
+            <div class="section-title"><span>02</span><div><h3>Shape the next step</h3><p>These fields keep the repair draft concrete.</p></div></div>
+            <label>Observable situation
+              <input id="situationInput" type="text" maxlength="240" placeholder="the plans changed and I did not hear from you" />
+            </label>
+            <label>What I felt
+              <input id="feelingInput" type="text" maxlength="160" placeholder="hurt and disconnected" />
+            </label>
+            <label>What matters or is needed
+              <input id="needInput" type="text" maxlength="200" placeholder="reliability and timely updates" />
+            </label>
+            <label>One doable request
+              <input id="requestInput" type="text" maxlength="240" placeholder="send a short message if plans change" />
+            </label>
+            <button class="primary-button full-width" type="submit">Generate reflection</button>
+            <p class="local-note">No account, upload, or server-side conversation storage.</p>
+          </section>
+        </form>
+
+        <section class="report-panel" id="reportPanel" hidden>
+          <div class="report-head">
+            <div><p class="eyebrow">Conversation reflection</p><h2>Signals to review, not labels to accept blindly.</h2><p id="reportStatus" aria-live="polite">Paste a conversation to begin.</p></div>
+          </div>
+          <div class="report-summary" id="reportSummary"></div>
+          <div class="safety-panel clear" id="safetyPanel"></div>
+
+          <div class="report-grid">
+            <section>
+              <h3>Pattern summary</h3>
+              <div class="pattern-list" id="patternList"></div>
+            </section>
+            <section>
+              <h3>Repair draft</h3>
+              <div class="repair-draft" id="repairDraft"></div>
+              <p class="draft-note">Send only if it feels safe and true. Edit the language so it sounds like you.</p>
+            </section>
+          </div>
+
+          <section class="line-section">
+            <h3>Line-by-line review</h3>
+            <div id="lineReview"></div>
+          </section>
+          <div class="report-actions">
+            <button class="secondary-button" id="copyReport" type="button" disabled>Copy report</button>
+            <button class="secondary-button" id="downloadReport" type="button" disabled>Download TXT</button>
+          </div>
+        </section>
+      </section>
+
+      <section class="boundary-band">
+        <div><p class="eyebrow">Safety boundary</p><h2>Wording support is not therapy or a safety assessment.</h2></div>
+        <p>RepairTalkAI cannot determine who is right, diagnose abuse, assess immediate danger, or replace a qualified professional. If you fear harm, retaliation, surveillance, or being prevented from leaving, prioritize safety rather than a joint confrontation.</p>
+      </section>
+
+      <section class="offer-band" id="offers">
+        <div><p class="eyebrow">Launch offers</p><h2>Keep the private tool. Add a prepared pack when the conversation needs structure.</h2></div>
+        <article>
+          <span class="price">$19</span><h3>Conversation Reset Pack</h3>
+          <p>A clean pattern summary, two repair-draft options, a pause plan, and a one-page next-conversation checklist.</p>
+          <span class="pending-link">PayPal link being connected</span>
+        </article>
+        <article>
+          <span class="price">$49</span><h3>Guided Repair Review</h3>
+          <p>A human-reviewed reflection of customer-provided text, neutral rewrite options, and a practical follow-up plan.</p>
+          <span class="pending-link">PayPal link being connected</span>
+        </article>
+      </section>
+    </main>
+
+    <footer>
+      <span>RepairTalkAI</span>
+      <span><a href="/privacy.html">Privacy</a> <a href="/terms.html">Terms</a> <a href="/support.html">Support</a> <a href="https://tools.pagecheckai.com">More tools</a></span>
+    </footer>
+    <script src="/app.js" type="module"></script>
+  </body>
+</html>
