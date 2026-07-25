@@ -7,8 +7,8 @@
 - Fallback URL: https://repairtalkai.pages.dev
 - Repository: https://github.com/JamesC-ai/repairtalkai
 - Offers:
-  - $19 Conversation Reset Pack
-  - $49 Guided Repair Review
+  - $19 Conversation Reset Pack: https://www.paypal.com/ncp/payment/QXL7YCNJWK6WU
+  - $49 Guided Repair Review: https://www.paypal.com/ncp/payment/5DN49T6JSRJF6
 - Safety boundary: not therapy, mediation, abuse diagnosis, legal advice, or a safety assessment; do not use joint repair scripts when harm or retaliation is feared.
 - Product status:
   - Browser-local conflict wording analysis live
@@ -18,5 +18,5 @@
   - TXT export and copyable report live
   - 12 SEO pages plus privacy, terms, support, robots, and sitemap live
   - Cloudflare custom domain active
-  - IndexNow submitted 16 URLs and returned 202 Accepted
-  - PayPal links pending
+  - IndexNow submitted 16 URLs; the latest submission returned 200 OK
+  - Both PayPal payment links live with shipping-address collection disabled

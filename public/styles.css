@@ -51,7 +51,7 @@ button { cursor: pointer; }
 .hero h1 { margin: 0; max-width: 620px; font-family: Georgia, serif; font-size: 58px; line-height: 1.02; letter-spacing: 0; }
 .hero p:not(.eyebrow) { max-width: 570px; margin: 24px 0 30px; font-size: 19px; }
 
-.primary-button, .secondary-button, .pending-link {
+.primary-button, .secondary-button {
   min-height: 46px;
   display: inline-flex;
   align-items: center;
@@ -131,7 +131,6 @@ input:focus, select:focus, textarea:focus { outline: 3px solid rgba(228,104,85,.
 .offer-band article:last-child { border-top-color: var(--coral); }
 .offer-band h3 { margin: 8px 0; font-size: 21px; }
 .price { font-family: Georgia, serif; font-size: 36px; font-weight: 800; }
-.pending-link { min-height: 0; padding: 8px 10px; background: #edf0ee; color: var(--muted); font-size: 12px; }
 
 footer { min-height: 90px; padding: 24px max(24px, calc((100vw - 1180px) / 2)); display: flex; justify-content: space-between; gap: 24px; align-items: center; border-top: 1px solid var(--line); background: var(--white); font-size: 14px; }
 footer a { margin-left: 14px; }

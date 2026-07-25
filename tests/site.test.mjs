@@ -16,6 +16,9 @@ test("build includes product, boundaries, legal pages, and sitemap", async () =>
   assert.match(privacy, /not uploaded/i);
   assert.match(terms, /not therapy, mediation, or a safety assessment/i);
   assert.match(support, /Formatting a conversation/);
+  assert.match(home, /https:\/\/www\.paypal\.com\/ncp\/payment\/QXL7YCNJWK6WU/);
+  assert.match(home, /https:\/\/www\.paypal\.com\/ncp\/payment\/5DN49T6JSRJF6/);
+  assert.doesNotMatch(home, /PayPal link being connected/);
   assert.equal((sitemap.match(/<url>/g) || []).length, 16);
 });
 
