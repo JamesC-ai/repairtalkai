@@ -3,9 +3,20 @@
 - Source: https://xiaobot.net/post/2d2552bc-24d9-485f-8982-4953faa68337
 - Opportunity: relationship conflict conversation analysis
 - Product: private browser-local wording reflection, pattern review, safety-language check, and repair-draft generator
-- Planned production URL: https://repair.pagecheckai.com
+- Production URL: https://repair.pagecheckai.com
+- Fallback URL: https://repairtalkai.pages.dev
+- Repository: https://github.com/JamesC-ai/repairtalkai
 - Offers:
   - $19 Conversation Reset Pack
   - $49 Guided Repair Review
 - Safety boundary: not therapy, mediation, abuse diagnosis, legal advice, or a safety assessment; do not use joint repair scripts when harm or retaliation is feared.
-- Status: implementation in progress
+- Product status:
+  - Browser-local conflict wording analysis live
+  - Friction, repair, and speaker-label summaries live
+  - Separate safety-language branch live
+  - Editable observation/feeling/need/request repair draft live
+  - TXT export and copyable report live
+  - 12 SEO pages plus privacy, terms, support, robots, and sitemap live
+  - Cloudflare custom domain active
+  - IndexNow submitted 16 URLs and returned 202 Accepted
+  - PayPal links pending
