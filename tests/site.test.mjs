@@ -3,6 +3,24 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { analyzeConversation, makeRepairDraft, parseConversation } from "../public/conversation-engine.js";
 
+const seoRoutes = [
+  "relationship-conflict-conversation-analyzer",
+  "how-to-talk-after-an-argument",
+  "repair-attempts-in-relationships",
+  "rewrite-blaming-language",
+  "always-never-language-in-arguments",
+  "conflict-repair-message-template",
+  "apology-message-after-argument",
+  "set-boundary-without-escalating",
+  "family-conflict-conversation-review",
+  "friendship-conflict-message-review",
+  "coworker-conflict-wording-check",
+  "conversation-pause-and-return-plan",
+  "coparenting-conflict-message-template",
+  "roommate-boundary-conversation-template",
+  "relationship-check-in-conversation-template",
+];
+
 test("build includes product, boundaries, legal pages, and sitemap", async () => {
   const [home, privacy, terms, support, sitemap] = await Promise.all([
     readFile("dist/index.html", "utf8"),
@@ -18,8 +36,32 @@ test("build includes product, boundaries, legal pages, and sitemap", async () =>
   assert.match(support, /Formatting a conversation/);
   assert.match(home, /https:\/\/www\.paypal\.com\/ncp\/payment\/QXL7YCNJWK6WU/);
   assert.match(home, /https:\/\/www\.paypal\.com\/ncp\/payment\/5DN49T6JSRJF6/);
+  assert.match(home, /Co-parenting logistics/);
+  assert.match(home, /Relationship check-in/);
   assert.doesNotMatch(home, /PayPal link being connected/);
-  assert.equal((sitemap.match(/<url>/g) || []).length, 16);
+  const sitemapUrls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
+  assert.equal(sitemapUrls.length, 19);
+  for (const route of seoRoutes) {
+    assert.ok(sitemapUrls.includes(`https://repair.pagecheckai.com/${route}/`), `missing sitemap route: ${route}`);
+  }
+});
+
+test("renders all reflection pages with privacy and safety boundaries", async () => {
+  for (const route of seoRoutes) {
+    const html = await readFile(`dist/${route}/index.html`, "utf8");
+    assert.match(html, /RepairTalkAI/);
+    assert.match(html, /Remove names and identifying details/);
+    assert.match(html, /Do not send a repair script if doing so could increase danger or retaliation/);
+    assert.match(html, /not therapy, mediation, abuse diagnosis, legal advice, or a safety assessment/);
+    assert.match(html, /not proof that a situation is safe/);
+  }
+});
+
+test("hosts the IndexNow key and visual asset", async () => {
+  const key = await readFile("dist/62434faa91efd58495e0d767e9fd2575.txt", "utf8");
+  const image = await readFile("dist/repair-conversation.png");
+  assert.equal(key.trim(), "62434faa91efd58495e0d767e9fd2575");
+  assert.ok(image.byteLength > 100000);
 });
 
 test("speaker labels are parsed without requiring personal names", () => {

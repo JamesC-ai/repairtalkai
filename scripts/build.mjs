@@ -86,6 +86,27 @@ const pages = [
     headline: "Pause a difficult conversation without disappearing.",
     intent: "People who need time to regulate before continuing a non-emergency discussion.",
   },
+  {
+    slug: "coparenting-conflict-message-template",
+    title: "Co-parenting conflict message template",
+    description: "Draft a factual co-parenting message focused on one schedule, handoff, update, or child-related request without assigning motives.",
+    headline: "Keep a co-parenting message specific and child-focused.",
+    intent: "Co-parents preparing routine, non-emergency logistics communication that does not replace legal advice or a court-approved process.",
+  },
+  {
+    slug: "roommate-boundary-conversation-template",
+    title: "Roommate boundary conversation template",
+    description: "Prepare a concrete roommate conversation about chores, noise, guests, shared costs, privacy, or common-space expectations.",
+    headline: "Turn a roommate frustration into one clear request.",
+    intent: "Roommates seeking a calm wording draft for ordinary shared-home expectations rather than threats, emergencies, or legal disputes.",
+  },
+  {
+    slug: "relationship-check-in-conversation-template",
+    title: "Relationship check-in conversation template",
+    description: "Structure a regular relationship check-in around appreciation, one current concern, one need, and one doable next step.",
+    headline: "Prepare a relationship check-in before tension builds.",
+    intent: "Partners who want a repeatable non-emergency check-in format without treating a template as therapy or a verdict about the relationship.",
+  },
 ];
 
 function escapeHtml(value) {
