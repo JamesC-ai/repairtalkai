@@ -19,6 +19,16 @@ const seoRoutes = [
   "coparenting-conflict-message-template",
   "roommate-boundary-conversation-template",
   "relationship-check-in-conversation-template",
+  "difficult-conversation-script-generator",
+  "ask-for-space-after-argument",
+  "parent-adult-child-boundary-message",
+  "sibling-conflict-message-template",
+  "in-law-boundary-conversation-template",
+  "money-conflict-conversation-template",
+  "household-chores-conversation-template",
+  "work-feedback-response-template",
+  "prepare-conversation-summary-for-therapy",
+  "repair-message-after-hurt-feelings",
 ];
 
 test("build includes product, boundaries, legal pages, and sitemap", async () => {
@@ -38,9 +48,11 @@ test("build includes product, boundaries, legal pages, and sitemap", async () =>
   assert.match(home, /https:\/\/www\.paypal\.com\/ncp\/payment\/5DN49T6JSRJF6/);
   assert.match(home, /Co-parenting logistics/);
   assert.match(home, /Relationship check-in/);
+  assert.match(home, /Difficult conversation/);
+  assert.match(home, /Work feedback/);
   assert.doesNotMatch(home, /PayPal link being connected/);
   const sitemapUrls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
-  assert.equal(sitemapUrls.length, 19);
+  assert.equal(sitemapUrls.length, 29);
   for (const route of seoRoutes) {
     assert.ok(sitemapUrls.includes(`https://repair.pagecheckai.com/${route}/`), `missing sitemap route: ${route}`);
   }
