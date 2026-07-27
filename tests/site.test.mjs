@@ -29,6 +29,16 @@ const seoRoutes = [
   "work-feedback-response-template",
   "prepare-conversation-summary-for-therapy",
   "repair-message-after-hurt-feelings",
+  "text-argument-deescalation-template",
+  "defensive-response-rewrite-template",
+  "listening-reflection-message-template",
+  "accountability-without-self-blame-template",
+  "missed-expectation-conversation-template",
+  "reconnect-after-silence-message",
+  "repair-after-cancelled-plans-message",
+  "holiday-family-boundary-message",
+  "group-chat-conflict-response-template",
+  "conversation-repair-checklist-for-couples",
 ];
 
 test("build includes product, boundaries, legal pages, and sitemap", async () => {
@@ -50,12 +60,29 @@ test("build includes product, boundaries, legal pages, and sitemap", async () =>
   assert.match(home, /Relationship check-in/);
   assert.match(home, /Difficult conversation/);
   assert.match(home, /Work feedback/);
+  assert.match(home, /Text argument/);
+  assert.match(home, /After silence/);
+  assert.match(home, /Group chat/);
   assert.doesNotMatch(home, /PayPal link being connected/);
   const sitemapUrls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
-  assert.equal(sitemapUrls.length, 29);
+  assert.equal(sitemapUrls.length, 39);
   for (const route of seoRoutes) {
     assert.ok(sitemapUrls.includes(`https://repair.pagecheckai.com/${route}/`), `missing sitemap route: ${route}`);
   }
+});
+
+test("new repair pages preserve safety and scope boundaries", async () => {
+  const textArgument = await readFile("dist/text-argument-deescalation-template/index.html", "utf8");
+  const holiday = await readFile("dist/holiday-family-boundary-message/index.html", "utf8");
+  const groupChat = await readFile("dist/group-chat-conflict-response-template/index.html", "utf8");
+  const couples = await readFile("dist/conversation-repair-checklist-for-couples/index.html", "utf8");
+  const combined = `${textArgument}\n${holiday}\n${groupChat}\n${couples}`;
+
+  assert.match(combined, /Remove names and identifying details/);
+  assert.match(combined, /Do not send a repair script if doing so could increase danger or retaliation/);
+  assert.match(combined, /not therapy, mediation, abuse diagnosis, legal advice, or a safety assessment/);
+  assert.match(combined, /not proof that a situation is safe/);
+  assert.doesNotMatch(combined.toLowerCase(), /guaranteed reconciliation|diagnose abuse|legal strategy|custody advice|emergency plan/);
 });
 
 test("renders all reflection pages with privacy and safety boundaries", async () => {
