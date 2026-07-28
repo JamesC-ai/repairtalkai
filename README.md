@@ -2,9 +2,9 @@
 
 Private browser-local conflict wording reflection and repair-draft generator.
 
-The production build includes 35 focused SEO pages, policy and support pages, a 39-URL sitemap, and IndexNow submission automation. Conversation text stays in the browser. The tool is not therapy, mediation, abuse diagnosis, legal advice, or a safety assessment.
+The production build includes 45 focused SEO pages, policy and support pages, a 49-URL sitemap, and IndexNow submission automation. Conversation text stays in the browser. The tool is not therapy, mediation, abuse diagnosis, legal advice, or a safety assessment.
 
-Latest expansion: text argument de-escalation, defensive-response rewrites, listening reflections, accountability without self-blame, missed expectations, reconnecting after silence, cancelled plans, holiday family boundaries, group-chat conflict, and couples repair checklists.
+Latest expansion: difficult texts before sending, sarcastic-comment repair, misunderstood messages, recurring lateness, shared calendars, neighbor noise, client boundaries, manager one-on-ones, friendship jealousy, and family event planning.
 
 ## Commands
 

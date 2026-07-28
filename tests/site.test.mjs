@@ -39,6 +39,16 @@ const seoRoutes = [
   "holiday-family-boundary-message",
   "group-chat-conflict-response-template",
   "conversation-repair-checklist-for-couples",
+  "difficult-text-before-sending-checklist",
+  "repair-after-sarcastic-comment-message",
+  "clarify-misunderstood-message-template",
+  "recurring-lateness-conversation-template",
+  "shared-calendar-conflict-message",
+  "neighbor-noise-conversation-template",
+  "client-boundary-message-template",
+  "manager-one-on-one-conflict-prep",
+  "friendship-jealousy-conversation-template",
+  "family-event-planning-conflict-message",
 ];
 
 test("build includes product, boundaries, legal pages, and sitemap", async () => {
@@ -63,9 +73,13 @@ test("build includes product, boundaries, legal pages, and sitemap", async () =>
   assert.match(home, /Text argument/);
   assert.match(home, /After silence/);
   assert.match(home, /Group chat/);
+  assert.match(home, /Before sending/);
+  assert.match(home, /Misunderstood message/);
+  assert.match(home, /Client boundary/);
+  assert.match(home, /Family event planning/);
   assert.doesNotMatch(home, /PayPal link being connected/);
   const sitemapUrls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
-  assert.equal(sitemapUrls.length, 39);
+  assert.equal(sitemapUrls.length, 49);
   for (const route of seoRoutes) {
     assert.ok(sitemapUrls.includes(`https://repair.pagecheckai.com/${route}/`), `missing sitemap route: ${route}`);
   }
@@ -76,7 +90,9 @@ test("new repair pages preserve safety and scope boundaries", async () => {
   const holiday = await readFile("dist/holiday-family-boundary-message/index.html", "utf8");
   const groupChat = await readFile("dist/group-chat-conflict-response-template/index.html", "utf8");
   const couples = await readFile("dist/conversation-repair-checklist-for-couples/index.html", "utf8");
-  const combined = `${textArgument}\n${holiday}\n${groupChat}\n${couples}`;
+  const client = await readFile("dist/client-boundary-message-template/index.html", "utf8");
+  const manager = await readFile("dist/manager-one-on-one-conflict-prep/index.html", "utf8");
+  const combined = `${textArgument}\n${holiday}\n${groupChat}\n${couples}\n${client}\n${manager}`;
 
   assert.match(combined, /Remove names and identifying details/);
   assert.match(combined, /Do not send a repair script if doing so could increase danger or retaliation/);
