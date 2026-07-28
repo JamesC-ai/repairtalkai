@@ -69,6 +69,16 @@ const seoRoutes = [
   "rehearse-hard-conversation-outline",
   "repair-after-broken-promise-message",
   "ask-for-feedback-after-conflict",
+  "repair-after-overpromising-message",
+  "reconnect-after-moving-away-message",
+  "after-hours-work-boundary-message",
+  "shared-caregiving-conflict-message",
+  "neighbor-parking-boundary-message",
+  "group-project-conflict-message",
+  "repair-after-public-criticism-message",
+  "apology-after-forgetting-task-message",
+  "ask-for-clarity-without-blame-message",
+  "pause-conversation-when-overwhelmed-message",
 ];
 
 test("build includes product, boundaries, legal pages, and sitemap", async () => {
@@ -103,7 +113,7 @@ test("build includes product, boundaries, legal pages, and sitemap", async () =>
   assert.match(home, /After interrupting/);
   assert.doesNotMatch(home, /PayPal link being connected/);
   const sitemapUrls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
-  assert.equal(sitemapUrls.length, 69);
+  assert.equal(sitemapUrls.length, 79);
   for (const route of seoRoutes) {
     assert.ok(sitemapUrls.includes(`https://repair.pagecheckai.com/${route}/`), `missing sitemap route: ${route}`);
   }
@@ -156,6 +166,23 @@ test("third-pass conversation pages keep legal, public, and safety boundaries", 
   assert.match(combined, /Do not send a repair script if doing so could increase danger or retaliation/);
   assert.match(combined, /not therapy, mediation, abuse diagnosis, legal advice, or a safety assessment/);
   assert.match(online, /keeping account actions and moderation outside the tool/);
+  assert.doesNotMatch(combined.toLowerCase(), /guaranteed reconciliation|can diagnose abuse|provides legal strategy|replaces hr|provides emergency planning/);
+});
+
+test("fourth-pass conversation pages keep work, caregiving, and public-repair boundaries", async () => {
+  const work = await readFile("dist/after-hours-work-boundary-message/index.html", "utf8");
+  const caregiving = await readFile("dist/shared-caregiving-conflict-message/index.html", "utf8");
+  const publicRepair = await readFile("dist/repair-after-public-criticism-message/index.html", "utf8");
+  const pause = await readFile("dist/pause-conversation-when-overwhelmed-message/index.html", "utf8");
+  const clarity = await readFile("dist/ask-for-clarity-without-blame-message/index.html", "utf8");
+  const combined = `${work}\n${caregiving}\n${publicRepair}\n${pause}\n${clarity}`;
+
+  assert.match(combined, /Remove names and identifying details/);
+  assert.match(combined, /Do not send a repair script if doing so could increase danger or retaliation/);
+  assert.match(combined, /not therapy, mediation, abuse diagnosis, legal advice, or a safety assessment/);
+  assert.match(work, /without replacing HR, legal, labor, or emergency processes/);
+  assert.match(caregiving, /not medical, legal, guardianship, or safety decisions/);
+  assert.match(publicRepair, /without pulling in an audience/);
   assert.doesNotMatch(combined.toLowerCase(), /guaranteed reconciliation|can diagnose abuse|provides legal strategy|replaces hr|provides emergency planning/);
 });
 
