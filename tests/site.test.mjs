@@ -49,6 +49,16 @@ const seoRoutes = [
   "manager-one-on-one-conflict-prep",
   "friendship-jealousy-conversation-template",
   "family-event-planning-conflict-message",
+  "apology-after-missed-deadline-message",
+  "roommate-chore-conflict-message",
+  "coworker-credit-taking-conversation",
+  "friend-borrowed-money-reminder",
+  "in-law-visit-boundary-message",
+  "customer-scope-creep-response",
+  "volunteer-team-conflict-message",
+  "wedding-planning-boundary-message",
+  "after-interrupting-someone-repair-message",
+  "decline-last-minute-request-message",
 ];
 
 test("build includes product, boundaries, legal pages, and sitemap", async () => {
@@ -77,9 +87,13 @@ test("build includes product, boundaries, legal pages, and sitemap", async () =>
   assert.match(home, /Misunderstood message/);
   assert.match(home, /Client boundary/);
   assert.match(home, /Family event planning/);
+  assert.match(home, /Missed deadline/);
+  assert.match(home, /Work credit/);
+  assert.match(home, /Scope creep/);
+  assert.match(home, /After interrupting/);
   assert.doesNotMatch(home, /PayPal link being connected/);
   const sitemapUrls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
-  assert.equal(sitemapUrls.length, 49);
+  assert.equal(sitemapUrls.length, 59);
   for (const route of seoRoutes) {
     assert.ok(sitemapUrls.includes(`https://repair.pagecheckai.com/${route}/`), `missing sitemap route: ${route}`);
   }
@@ -99,6 +113,26 @@ test("new repair pages preserve safety and scope boundaries", async () => {
   assert.match(combined, /not therapy, mediation, abuse diagnosis, legal advice, or a safety assessment/);
   assert.match(combined, /not proof that a situation is safe/);
   assert.doesNotMatch(combined.toLowerCase(), /guaranteed reconciliation|diagnose abuse|legal strategy|custody advice|emergency plan/);
+});
+
+test("second-pass conversation pages keep private reflection boundaries", async () => {
+  const routes = [
+    "coworker-credit-taking-conversation",
+    "friend-borrowed-money-reminder",
+    "customer-scope-creep-response",
+    "wedding-planning-boundary-message",
+    "decline-last-minute-request-message",
+  ];
+  const combined = (await Promise.all(
+    routes.map((route) => readFile(`dist/${route}/index.html`, "utf8")),
+  )).join("\n");
+
+  assert.match(combined, /Private wording reflection/);
+  assert.match(combined, /Remove names and identifying details/);
+  assert.match(combined, /Do not send a repair script if doing so could increase danger or retaliation/);
+  assert.match(combined, /not therapy, mediation, abuse diagnosis, legal advice, or a safety assessment/);
+  assert.match(combined, /not proof that a situation is safe/);
+  assert.doesNotMatch(combined.toLowerCase(), /guaranteed reconciliation|can diagnose abuse|provides legal strategy|replaces hr|acts as a debt collection service|provides emergency planning/);
 });
 
 test("renders all reflection pages with privacy and safety boundaries", async () => {
