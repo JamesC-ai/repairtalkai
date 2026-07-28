@@ -59,6 +59,16 @@ const seoRoutes = [
   "wedding-planning-boundary-message",
   "after-interrupting-someone-repair-message",
   "decline-last-minute-request-message",
+  "repair-after-forgotten-birthday-message",
+  "apology-after-late-reply-message",
+  "teacher-parent-concern-message",
+  "team-meeting-tension-follow-up",
+  "landlord-repair-request-boundary",
+  "shared-business-partner-conflict-message",
+  "online-comment-repair-message",
+  "rehearse-hard-conversation-outline",
+  "repair-after-broken-promise-message",
+  "ask-for-feedback-after-conflict",
 ];
 
 test("build includes product, boundaries, legal pages, and sitemap", async () => {
@@ -93,7 +103,7 @@ test("build includes product, boundaries, legal pages, and sitemap", async () =>
   assert.match(home, /After interrupting/);
   assert.doesNotMatch(home, /PayPal link being connected/);
   const sitemapUrls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
-  assert.equal(sitemapUrls.length, 59);
+  assert.equal(sitemapUrls.length, 69);
   for (const route of seoRoutes) {
     assert.ok(sitemapUrls.includes(`https://repair.pagecheckai.com/${route}/`), `missing sitemap route: ${route}`);
   }
@@ -133,6 +143,20 @@ test("second-pass conversation pages keep private reflection boundaries", async 
   assert.match(combined, /not therapy, mediation, abuse diagnosis, legal advice, or a safety assessment/);
   assert.match(combined, /not proof that a situation is safe/);
   assert.doesNotMatch(combined.toLowerCase(), /guaranteed reconciliation|can diagnose abuse|provides legal strategy|replaces hr|acts as a debt collection service|provides emergency planning/);
+});
+
+test("third-pass conversation pages keep legal, public, and safety boundaries", async () => {
+  const landlord = await readFile("dist/landlord-repair-request-boundary/index.html", "utf8");
+  const online = await readFile("dist/online-comment-repair-message/index.html", "utf8");
+  const rehearsal = await readFile("dist/rehearse-hard-conversation-outline/index.html", "utf8");
+  const feedback = await readFile("dist/ask-for-feedback-after-conflict/index.html", "utf8");
+  const combined = `${landlord}\n${online}\n${rehearsal}\n${feedback}`;
+
+  assert.match(combined, /Remove names and identifying details/);
+  assert.match(combined, /Do not send a repair script if doing so could increase danger or retaliation/);
+  assert.match(combined, /not therapy, mediation, abuse diagnosis, legal advice, or a safety assessment/);
+  assert.match(online, /keeping account actions and moderation outside the tool/);
+  assert.doesNotMatch(combined.toLowerCase(), /guaranteed reconciliation|can diagnose abuse|provides legal strategy|replaces hr|provides emergency planning/);
 });
 
 test("renders all reflection pages with privacy and safety boundaries", async () => {
