@@ -128,13 +128,34 @@
         <article>
           <span class="price">$19</span><h3>Conversation Reset Pack</h3>
           <p>A clean pattern summary, two repair-draft options, a pause plan, and a one-page next-conversation checklist.</p>
-          <a class="primary-button" href="https://www.paypal.com/ncp/payment/QXL7YCNJWK6WU">Buy with PayPal</a>
+          <a class="primary-button" href="https://namebatch.pagecheckai.com/api/checkout?v=repairtalk-20260731&amp;product=repairtalkai">Buy Conversation Reset Pack</a>
+          <p class="fallback-note">PayPal fallback: <a href="https://www.paypal.com/ncp/payment/QXL7YCNJWK6WU">QXL7YCNJWK6WU</a></p>
         </article>
         <article>
           <span class="price">$49</span><h3>Guided Repair Review</h3>
-          <p>A human-reviewed reflection of customer-provided text, neutral rewrite options, and a practical follow-up plan.</p>
-          <a class="secondary-button" href="https://www.paypal.com/ncp/payment/5DN49T6JSRJF6">Buy with PayPal</a>
+          <p>A browser-local guided review workbook with neutral rewrite options, safety-boundary prompts, and a practical follow-up plan.</p>
+          <a class="secondary-button" href="https://namebatch.pagecheckai.com/api/checkout?v=repairtalk-20260731&amp;product=repairtalkreview">Buy Guided Repair Review</a>
+          <p class="fallback-note">PayPal fallback: <a href="https://www.paypal.com/ncp/payment/5DN49T6JSRJF6">5DN49T6JSRJF6</a></p>
         </article>
+      </section>
+
+      <section class="activation-band" aria-label="Paid repair pack activation">
+        <div>
+          <p class="eyebrow">Paid download</p>
+          <h2>Enter an RT- or RR- code to download the paid repair pack.</h2>
+          <p>The license check sends only the activation code and product name. Conversation text, report matches, draft wording, and safety notes stay in this browser unless you choose to share them.</p>
+        </div>
+        <div class="activation-panel">
+          <label>
+            Activation code
+            <input id="proCode" type="text" autocomplete="off" placeholder="RT- or RR-XXXX-XXXX-XXXX-XXXX" />
+          </label>
+          <div class="activation-actions">
+            <button class="primary-button" id="activatePack" type="button">Activate</button>
+            <button class="secondary-button" id="downloadPack" type="button" disabled>Download paid pack</button>
+          </div>
+          <p id="proStatus" aria-live="polite">Generate a reflection, then enter the code from your PayPal confirmation.</p>
+        </div>
       </section>
 
       <section class="guide-band" aria-label="Conversation templates">

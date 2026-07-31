@@ -94,8 +94,12 @@ test("build includes product, boundaries, legal pages, and sitemap", async () =>
   assert.match(privacy, /not uploaded/i);
   assert.match(terms, /not therapy, mediation, or a safety assessment/i);
   assert.match(support, /Formatting a conversation/);
+  assert.match(home, /https:\/\/namebatch\.pagecheckai\.com\/api\/checkout\?v=repairtalk-20260731&amp;product=repairtalkai/);
+  assert.match(home, /https:\/\/namebatch\.pagecheckai\.com\/api\/checkout\?v=repairtalk-20260731&amp;product=repairtalkreview/);
   assert.match(home, /https:\/\/www\.paypal\.com\/ncp\/payment\/QXL7YCNJWK6WU/);
   assert.match(home, /https:\/\/www\.paypal\.com\/ncp\/payment\/5DN49T6JSRJF6/);
+  assert.match(home, /Enter an RT- or RR- code/);
+  assert.match(home, /sends only the activation code and product name/);
   assert.match(home, /Co-parenting logistics/);
   assert.match(home, /Relationship check-in/);
   assert.match(home, /Difficult conversation/);
@@ -112,11 +116,26 @@ test("build includes product, boundaries, legal pages, and sitemap", async () =>
   assert.match(home, /Scope creep/);
   assert.match(home, /After interrupting/);
   assert.doesNotMatch(home, /PayPal link being connected/);
+  assert.match(support, /generated locally from the current browser reflection/);
+  assert.match(privacy, /does not send conversation text, report matches, draft wording, or safety notes/);
+  assert.match(terms, /browser-generated planning files/);
   const sitemapUrls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
   assert.equal(sitemapUrls.length, 79);
   for (const route of seoRoutes) {
     assert.ok(sitemapUrls.includes(`https://repair.pagecheckai.com/${route}/`), `missing sitemap route: ${route}`);
   }
+});
+
+test("paid pack activation stays product-scoped and browser-local", async () => {
+  const app = await readFile("dist/app.js", "utf8");
+
+  assert.match(app, /LICENSE_VERIFY_URL = "https:\/\/namebatch\.pagecheckai\.com\/api\/licenses\/verify"/);
+  assert.match(app, /product: "repairtalkai"/);
+  assert.match(app, /product: "repairtalkreview"/);
+  assert.match(app, /entitlement: "conversation_reset_pack"/);
+  assert.match(app, /entitlement: "guided_repair_review_pack"/);
+  assert.match(app, /JSON\.stringify\(\{ code, product: product\.product \}\)/);
+  assert.match(app, /Generated locally in this browser/);
 });
 
 test("new repair pages preserve safety and scope boundaries", async () => {
