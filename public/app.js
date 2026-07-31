@@ -19,8 +19,17 @@ const lineReview = document.querySelector("#lineReview");
 const repairDraft = document.querySelector("#repairDraft");
 const copyButton = document.querySelector("#copyReport");
 const downloadButton = document.querySelector("#downloadReport");
+const proCode = document.querySelector("#proCode");
+const proStatus = document.querySelector("#proStatus");
+const activatePack = document.querySelector("#activatePack");
+const downloadPack = document.querySelector("#downloadPack");
+
+const LICENSE_VERIFY_URL = "https://namebatch.pagecheckai.com/api/licenses/verify";
+const STORAGE_KEY = "repairtalkai-paid-code";
 
 let lastReport = "";
+let paidPackActive = false;
+let paidPackEntitlement = "";
 
 const relationshipLabels = {
   partner: "partnership",
@@ -118,6 +127,110 @@ function buildTextReport(analysis, draft) {
   ].join("\n");
 }
 
+function paidPackText() {
+  const packName = paidPackEntitlement === "guided_repair_review_pack"
+    ? "Guided Repair Review"
+    : "Conversation Reset Pack";
+  const guidedSection = paidPackEntitlement === "guided_repair_review_pack"
+    ? [
+        "Guided review workbook",
+        "- Rewrite the core message in one calm paragraph, one short text, and one boundary-setting version.",
+        "- Mark any sentence that tries to diagnose, punish, pressure, monitor, or force agreement.",
+        "- Identify what belongs outside this conversation: legal, HR, clinical, emergency, financial, or safety decisions.",
+        "- Choose one follow-up window and one exit line if the exchange escalates.",
+        "",
+      ].join("\n")
+    : [
+        "Conversation reset checklist",
+        "- Pause before sending if the draft is trying to win, prove, threaten, or diagnose.",
+        "- Keep one observable situation, one feeling, one need, and one doable request.",
+        "- Remove names, addresses, employer details, account numbers, and unrelated private facts.",
+        "- Edit every sentence until it sounds like you and feels safe to send.",
+        "",
+      ].join("\n");
+
+  return [
+    `RepairTalkAI paid download: ${packName}`,
+    "Generated locally in this browser from the current reflection report. The license check sends only an activation code and product name. Conversation text, report matches, draft wording, and safety notes stay on this device unless you choose to share them.",
+    "",
+    lastReport || "Generate a reflection before using this workbook.",
+    "",
+    guidedSection,
+    "Boundary",
+    "- This is a wording aid, not therapy, mediation, abuse diagnosis, legal advice, HR advice, debt collection, or a safety assessment.",
+    "- A missing safety phrase is not proof that a situation is safe.",
+    "- Do not send a repair script if doing so could increase danger, retaliation, surveillance, coercion, or pressure.",
+    "- No reconciliation, response, behavior change, safety, legal, ranking, traffic, sales, or revenue result is guaranteed.",
+  ].join("\n");
+}
+
+function updatePaidDownloadState(message) {
+  if (downloadPack) downloadPack.disabled = !paidPackActive || !lastReport;
+  if (proStatus && message) proStatus.textContent = message;
+}
+
+function setPaidPackActive(active, message, entitlement = "") {
+  paidPackActive = active;
+  paidPackEntitlement = active ? entitlement : "";
+  updatePaidDownloadState(message);
+}
+
+function productFromCode(rawCode) {
+  const code = rawCode.trim().toUpperCase();
+  if (code.startsWith("RT-")) return { product: "repairtalkai", entitlement: "conversation_reset_pack" };
+  if (code.startsWith("RR-")) return { product: "repairtalkreview", entitlement: "guided_repair_review_pack" };
+  return null;
+}
+
+async function verifyPaidPackCode(rawCode, { quiet = false } = {}) {
+  const code = rawCode.trim().toUpperCase();
+  const product = productFromCode(code);
+  if (!product) {
+    setPaidPackActive(false, quiet ? "Enter a valid RT- or RR- code to unlock a repair pack." : "That activation code format is not valid.");
+    return false;
+  }
+  if (!quiet) proStatus.textContent = "Checking activation code...";
+  try {
+    const response = await fetch(LICENSE_VERIFY_URL, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ code, product: product.product }),
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok || !data.valid || data.entitlement !== product.entitlement) {
+      setPaidPackActive(false, "That activation code was not accepted for this RepairTalkAI pack.");
+      return false;
+    }
+    localStorage.setItem(STORAGE_KEY, code);
+    const ready = lastReport ? "Activation verified. Download your paid pack when ready." : "Activation verified. Generate a reflection, then download your paid pack.";
+    setPaidPackActive(true, ready, product.entitlement);
+    return true;
+  } catch {
+    setPaidPackActive(false, "Could not reach the license service. Try again, or use support with your PayPal receipt.");
+    return false;
+  }
+}
+
+function downloadPaidPack() {
+  if (!paidPackActive) {
+    setPaidPackActive(false, "Activate a repair pack before downloading.");
+    return;
+  }
+  if (!lastReport) {
+    updatePaidDownloadState("Generate a reflection before downloading the paid pack.");
+    return;
+  }
+  const url = URL.createObjectURL(new Blob([paidPackText()], { type: "text/plain;charset=utf-8" }));
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = paidPackEntitlement === "guided_repair_review_pack"
+    ? "repairtalkai-guided-repair-review.txt"
+    : "repairtalkai-conversation-reset-pack.txt";
+  link.click();
+  URL.revokeObjectURL(url);
+  updatePaidDownloadState("Paid pack downloaded locally.");
+}
+
 function renderReport(analysis) {
   const draft = makeRepairDraft({
     goal: goalInput.value,
@@ -143,6 +256,7 @@ function renderReport(analysis) {
   lastReport = buildTextReport(analysis, draft);
   copyButton.disabled = false;
   downloadButton.disabled = false;
+  updatePaidDownloadState(paidPackActive ? "Reflection ready. Download your paid pack when ready." : "Reflection ready. Enter an RT- or RR- code to unlock a paid pack.");
   reportPanel.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
@@ -176,6 +290,7 @@ clearButton.addEventListener("click", () => {
   copyButton.disabled = true;
   downloadButton.disabled = true;
   lastReport = "";
+  updatePaidDownloadState(paidPackActive ? "Generate a reflection before downloading the paid pack." : "Generate a reflection, then enter the code from your PayPal confirmation.");
 });
 
 copyButton.addEventListener("click", async () => {
@@ -196,3 +311,11 @@ downloadButton.addEventListener("click", () => {
   link.click();
   URL.revokeObjectURL(url);
 });
+activatePack?.addEventListener("click", () => verifyPaidPackCode(proCode.value));
+downloadPack?.addEventListener("click", downloadPaidPack);
+
+const savedCode = localStorage.getItem(STORAGE_KEY);
+if (savedCode) {
+  proCode.value = savedCode;
+  verifyPaidPackCode(savedCode, { quiet: true });
+}
