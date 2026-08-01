@@ -90,6 +90,14 @@ test("build includes product, boundaries, legal pages, and sitemap", async () =>
     readFile("dist/sitemap.xml", "utf8"),
   ]);
   assert.match(home, /RepairTalkAI/);
+  assert.match(home, /Run the free reflection before buying a repair pack/);
+  assert.match(home, /Run free reflection/);
+  assert.match(home, /Compare \$19 and \$49 packs/);
+  assert.match(home, /Free draft first/);
+  assert.match(home, /Buy after the free reflection gives you a draft worth refining/);
+  assert.match(home, /Good fit for \$19/);
+  assert.match(home, /Good fit for \$49/);
+  assert.match(home, /Skip payment when/);
   assert.match(home, /text stays in this browser/i);
   assert.match(privacy, /not uploaded/i);
   assert.match(terms, /not therapy, mediation, or a safety assessment/i);
@@ -210,6 +218,9 @@ test("renders all reflection pages with privacy and safety boundaries", async ()
     const html = await readFile(`dist/${route}/index.html`, "utf8");
     assert.match(html, /RepairTalkAI/);
     assert.match(html, /Remove names and identifying details/);
+    assert.match(html, /When a paid repair pack is worth it/);
+    assert.match(html, /Buy the \$19 Conversation Reset Pack only when/);
+    assert.match(html, /Skip payment if you need therapy/);
     assert.match(html, /Do not send a repair script if doing so could increase danger or retaliation/);
     assert.match(html, /not therapy, mediation, abuse diagnosis, legal advice, or a safety assessment/);
     assert.match(html, /not proof that a situation is safe/);

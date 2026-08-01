@@ -568,6 +568,8 @@ function pageHtml(page) {
         <li>Do not send a repair script if doing so could increase danger or retaliation.</li>
       </ol>
       <p><a class="primary-button" href="/#reflection">Run a private reflection</a></p>
+      <h2>When a paid repair pack is worth it</h2>
+      <p>Use the free reflection first. Buy the $19 Conversation Reset Pack only when it produces a draft worth refining and you want two calmer wording options, a pause plan, and a one-page next-conversation checklist. Choose the $49 Guided Repair Review only when you need a deeper browser-local workbook and neutral rewrite options. Skip payment if you need therapy, mediation, abuse diagnosis, legal advice, HR strategy, urgent safety support, coercion support, or a safety assessment.</p>
       <h2>Boundary</h2>
       <p>RepairTalkAI is a wording aid, not therapy, mediation, abuse diagnosis, legal advice, or a safety assessment. A missing safety phrase is not proof that a situation is safe.</p>
       <p><a href="/support.html">Support</a> · <a href="https://tools.pagecheckai.com">More PageCheckAI tools</a></p>
