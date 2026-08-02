@@ -107,6 +107,8 @@ test("build includes product, boundaries, legal pages, and sitemap", async () =>
   assert.match(home, /https:\/\/www\.paypal\.com\/ncp\/payment\/QXL7YCNJWK6WU/);
   assert.match(home, /https:\/\/www\.paypal\.com\/ncp\/payment\/5DN49T6JSRJF6/);
   assert.match(home, /Enter an RT- or RR- code/);
+  assert.match(home, /After payment, enter the RT- or RR- activation code here/);
+  assert.match(home, /open support/);
   assert.match(home, /sends only the activation code and product name/);
   assert.match(home, /Co-parenting logistics/);
   assert.match(home, /Relationship check-in/);
