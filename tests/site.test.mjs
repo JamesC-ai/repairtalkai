@@ -102,8 +102,10 @@ test("build includes product, boundaries, legal pages, and sitemap", async () =>
   assert.match(privacy, /not uploaded/i);
   assert.match(terms, /not therapy, mediation, or a safety assessment/i);
   assert.match(support, /Formatting a conversation/);
-  assert.match(home, /https:\/\/namebatch\.pagecheckai\.com\/api\/checkout\?v=repairtalk-20260731&amp;product=repairtalkai/);
-  assert.match(home, /https:\/\/namebatch\.pagecheckai\.com\/api\/checkout\?v=repairtalk-20260731&amp;product=repairtalkreview/);
+  assert.match(support, /product=repairtalkai&amp;utm_source=repairtalkai&amp;utm_medium=owned&amp;utm_campaign=conversion&amp;utm_content=support_reset/);
+  assert.match(support, /product=repairtalkreview&amp;utm_source=repairtalkai&amp;utm_medium=owned&amp;utm_campaign=conversion&amp;utm_content=support_review/);
+  assert.match(home, /https:\/\/namebatch\.pagecheckai\.com\/api\/checkout\?v=repairtalk-20260731&amp;product=repairtalkai&amp;utm_source=repairtalkai&amp;utm_medium=owned&amp;utm_campaign=conversion&amp;utm_content=home_reset/);
+  assert.match(home, /https:\/\/namebatch\.pagecheckai\.com\/api\/checkout\?v=repairtalk-20260731&amp;product=repairtalkreview&amp;utm_source=repairtalkai&amp;utm_medium=owned&amp;utm_campaign=conversion&amp;utm_content=home_review/);
   assert.match(home, /https:\/\/www\.paypal\.com\/ncp\/payment\/QXL7YCNJWK6WU/);
   assert.match(home, /https:\/\/www\.paypal\.com\/ncp\/payment\/5DN49T6JSRJF6/);
   assert.match(home, /Enter an RT- or RR- code/);
@@ -226,6 +228,8 @@ test("renders all reflection pages with privacy and safety boundaries", async ()
     assert.match(html, /Do not send a repair script if doing so could increase danger or retaliation/);
     assert.match(html, /not therapy, mediation, abuse diagnosis, legal advice, or a safety assessment/);
     assert.match(html, /not proof that a situation is safe/);
+    assert.match(html, new RegExp(`product=repairtalkai&amp;utm_source=repairtalkai&amp;utm_medium=owned&amp;utm_campaign=conversion&amp;utm_content=seo_${route}_reset`));
+    assert.match(html, new RegExp(`product=repairtalkreview&amp;utm_source=repairtalkai&amp;utm_medium=owned&amp;utm_campaign=conversion&amp;utm_content=seo_${route}_review`));
   }
 });
 
