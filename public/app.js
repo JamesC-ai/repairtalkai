@@ -28,6 +28,8 @@ const LICENSE_VERIFY_URL = "https://namebatch.pagecheckai.com/api/licenses/verif
 const STORAGE_KEY = "repairtalkai-paid-code";
 
 let lastReport = "";
+let lastReportIsDemo = false;
+let demoInputsLoaded = false;
 let paidPackActive = false;
 let paidPackEntitlement = "";
 
@@ -152,6 +154,7 @@ function paidPackText() {
   return [
     `RepairTalkAI paid download: ${packName}`,
     "Generated locally in this browser from the current reflection report. The license check sends only an activation code and product name. Conversation text, report matches, draft wording, and safety notes stay on this device unless you choose to share them.",
+    "Input source: Your current conversation and reflection fields (not the built-in demo).",
     "",
     lastReport || "Generate a reflection before using this workbook.",
     "",
@@ -165,13 +168,14 @@ function paidPackText() {
 }
 
 function updatePaidDownloadState(message) {
-  if (downloadPack) downloadPack.disabled = !paidPackActive || !lastReport;
+  if (downloadPack) downloadPack.disabled = !paidPackActive || !lastReport || lastReportIsDemo;
   if (proStatus && message) proStatus.textContent = message;
 }
 
 function invalidateReport(message = "Reflection inputs changed. Run the reflection again before copying or downloading.") {
   if (!lastReport) return;
   lastReport = "";
+  lastReportIsDemo = false;
   reportPanel.hidden = true;
   copyButton.disabled = true;
   downloadButton.disabled = true;
@@ -216,7 +220,11 @@ async function verifyPaidPackCode(rawCode, { quiet = false } = {}) {
       return false;
     }
     localStorage.setItem(STORAGE_KEY, code);
-    const ready = lastReport ? "Activation verified. Download your paid pack when ready." : "Activation verified. Generate a reflection, then download your paid pack.";
+    const ready = lastReportIsDemo
+      ? "Activation verified. The demo is for preview only; use your own conversation and generate again before downloading."
+      : lastReport
+        ? "Activation verified. Download your paid pack when ready."
+        : "Activation verified. Generate a reflection, then download your paid pack.";
     setPaidPackActive(true, ready, product.entitlement);
     return true;
   } catch {
@@ -234,6 +242,10 @@ function downloadPaidPack() {
     updatePaidDownloadState("Generate a reflection before downloading the paid pack.");
     return;
   }
+  if (lastReportIsDemo) {
+    updatePaidDownloadState("The demo is for preview only. Edit the fields with your own conversation and generate a new reflection before downloading a paid pack.");
+    return;
+  }
   const url = URL.createObjectURL(new Blob([paidPackText()], { type: "text/plain;charset=utf-8" }));
   const link = document.createElement("a");
   link.href = url;
@@ -245,7 +257,7 @@ function downloadPaidPack() {
   updatePaidDownloadState("Paid pack downloaded locally.");
 }
 
-function renderReport(analysis) {
+function renderReport(analysis, { isDemo = false } = {}) {
   const draft = makeRepairDraft({
     goal: goalInput.value,
     relationship: relationshipLabels[relationshipInput.value] || relationshipLabels.other,
@@ -268,9 +280,16 @@ function renderReport(analysis) {
   renderLines(analysis);
   repairDraft.textContent = draft;
   lastReport = buildTextReport(analysis, draft);
+  lastReportIsDemo = isDemo;
   copyButton.disabled = false;
   downloadButton.disabled = false;
-  updatePaidDownloadState(paidPackActive ? "Reflection ready. Download your paid pack when ready." : "Reflection ready. Enter an RT- or RR- code to unlock a paid pack.");
+  updatePaidDownloadState(
+    isDemo
+      ? "Demo reflection ready for preview. Use your own conversation and generate again before downloading a paid pack."
+      : paidPackActive
+        ? "Reflection ready. Download your paid pack when ready."
+        : "Reflection ready. Enter an RT- or RR- code to unlock a paid pack.",
+  );
   reportPanel.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
@@ -282,10 +301,13 @@ form.addEventListener("submit", (event) => {
     conversationInput.focus();
     return;
   }
-  renderReport(analyzeConversation(source));
+  renderReport(analyzeConversation(source), { isDemo: demoInputsLoaded });
 });
 
-form.addEventListener("input", () => invalidateReport());
+form.addEventListener("input", () => {
+  demoInputsLoaded = false;
+  invalidateReport();
+});
 
 loadDemoButton.addEventListener("click", () => {
   invalidateReport("Demo conversation loaded. Run the reflection again before copying or downloading.");
@@ -296,6 +318,7 @@ loadDemoButton.addEventListener("click", () => {
   feelingInput.value = "hurt and left out";
   needInput.value = "reliability and timely updates";
   requestInput.value = "send a short message when plans change";
+  demoInputsLoaded = true;
   reportStatus.textContent = "Demo conversation loaded.";
 });
 
@@ -308,6 +331,8 @@ clearButton.addEventListener("click", () => {
   copyButton.disabled = true;
   downloadButton.disabled = true;
   lastReport = "";
+  lastReportIsDemo = false;
+  demoInputsLoaded = false;
   updatePaidDownloadState(paidPackActive ? "Generate a reflection before downloading the paid pack." : "Generate a reflection, then enter the code from your PayPal confirmation.");
 });
 

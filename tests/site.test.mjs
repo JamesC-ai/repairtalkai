@@ -149,9 +149,15 @@ test("paid pack activation stays product-scoped and browser-local", async () => 
   assert.match(app, /JSON\.stringify\(\{ code, product: product\.product \}\)/);
   assert.match(app, /Generated locally in this browser/);
   assert.match(app, /function invalidateReport/);
-  assert.match(app, /form\.addEventListener\("input", \(\) => invalidateReport\(\)\)/);
+  assert.match(app, /form\.addEventListener\("input", \(\) => \{/);
   assert.match(app, /Reflection inputs changed\. Generate a new reflection before downloading the paid pack/);
   assert.match(app, /Demo conversation loaded\. Run the reflection again before copying or downloading/);
+  assert.match(app, /downloadPack\.disabled = !paidPackActive \|\| !lastReport \|\| lastReportIsDemo/);
+  assert.match(app, /The demo is for preview only\. Edit the fields with your own conversation/);
+  assert.match(app, /Activation verified\. The demo is for preview only; use your own conversation/);
+  assert.match(app, /Input source: Your current conversation and reflection fields \(not the built-in demo\)/);
+  assert.match(app, /renderReport\(analyzeConversation\(source\), \{ isDemo: demoInputsLoaded \}\)/);
+  assert.match(app, /demoInputsLoaded = false;\s+invalidateReport\(\)/);
 });
 
 test("new repair pages preserve safety and scope boundaries", async () => {
