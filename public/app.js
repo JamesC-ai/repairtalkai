@@ -169,6 +169,20 @@ function updatePaidDownloadState(message) {
   if (proStatus && message) proStatus.textContent = message;
 }
 
+function invalidateReport(message = "Reflection inputs changed. Run the reflection again before copying or downloading.") {
+  if (!lastReport) return;
+  lastReport = "";
+  reportPanel.hidden = true;
+  copyButton.disabled = true;
+  downloadButton.disabled = true;
+  reportStatus.textContent = message;
+  updatePaidDownloadState(
+    paidPackActive
+      ? "Reflection inputs changed. Generate a new reflection before downloading the paid pack."
+      : "Reflection inputs changed. Generate a new reflection before exporting.",
+  );
+}
+
 function setPaidPackActive(active, message, entitlement = "") {
   paidPackActive = active;
   paidPackEntitlement = active ? entitlement : "";
@@ -271,7 +285,10 @@ form.addEventListener("submit", (event) => {
   renderReport(analyzeConversation(source));
 });
 
+form.addEventListener("input", () => invalidateReport());
+
 loadDemoButton.addEventListener("click", () => {
+  invalidateReport("Demo conversation loaded. Run the reflection again before copying or downloading.");
   relationshipInput.value = "partner";
   goalInput.value = "reconnect";
   conversationInput.value = demoConversation;
@@ -285,6 +302,7 @@ loadDemoButton.addEventListener("click", () => {
 clearButton.addEventListener("click", () => {
   form.reset();
   conversationInput.value = "";
+  invalidateReport("Paste a conversation to begin.");
   reportPanel.hidden = true;
   reportStatus.textContent = "Paste a conversation to begin.";
   copyButton.disabled = true;

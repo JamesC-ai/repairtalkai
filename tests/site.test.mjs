@@ -148,6 +148,10 @@ test("paid pack activation stays product-scoped and browser-local", async () => 
   assert.match(app, /entitlement: "guided_repair_review_pack"/);
   assert.match(app, /JSON\.stringify\(\{ code, product: product\.product \}\)/);
   assert.match(app, /Generated locally in this browser/);
+  assert.match(app, /function invalidateReport/);
+  assert.match(app, /form\.addEventListener\("input", \(\) => invalidateReport\(\)\)/);
+  assert.match(app, /Reflection inputs changed\. Generate a new reflection before downloading the paid pack/);
+  assert.match(app, /Demo conversation loaded\. Run the reflection again before copying or downloading/);
 });
 
 test("new repair pages preserve safety and scope boundaries", async () => {
