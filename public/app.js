@@ -23,12 +23,30 @@ const proCode = document.querySelector("#proCode");
 const proStatus = document.querySelector("#proStatus");
 const activatePack = document.querySelector("#activatePack");
 const downloadPack = document.querySelector("#downloadPack");
+const reviewForm = document.querySelector("#reviewForm");
+const sourceContext = document.querySelector("#sourceContext");
+const reviewDate = document.querySelector("#reviewDate");
+const humanReviewer = document.querySelector("#humanReviewer");
+const intendedUse = document.querySelector("#intendedUse");
+const reviewNotes = document.querySelector("#reviewNotes");
+const guidedScope = document.querySelector("#guidedScope");
+const safetyConfirmed = document.querySelector("#safetyConfirmed");
+const paymentStatus = document.querySelector("#paymentStatus");
+const checkoutReset = document.querySelector("#checkoutReset");
+const paypalReset = document.querySelector("#paypalReset");
+const checkoutReview = document.querySelector("#checkoutReview");
+const paypalReview = document.querySelector("#paypalReview");
 
 const LICENSE_VERIFY_URL = "https://namebatch.pagecheckai.com/api/licenses/verify";
 const STORAGE_KEY = "repairtalkai-paid-code";
+const CHECKOUT_BASE = "https://namebatch.pagecheckai.com/api/checkout?v=repairtalk-20260731";
+const PAYPAL_RESET_URL = "https://www.paypal.com/ncp/payment/QXL7YCNJWK6WU";
+const PAYPAL_REVIEW_URL = "https://www.paypal.com/ncp/payment/5DN49T6JSRJF6";
 
 let lastReport = "";
 let lastReportIsDemo = false;
+let lastReportHasSafetySignals = false;
+let lastReportSignature = "";
 let demoInputsLoaded = false;
 let paidPackActive = false;
 let paidPackEntitlement = "";
@@ -54,6 +72,78 @@ function escapeHtml(value) {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#39;");
+}
+
+function checkoutUrl(product, content) {
+  const url = new URL(CHECKOUT_BASE);
+  url.searchParams.set("product", product);
+  url.searchParams.set("utm_source", "repairtalkai");
+  url.searchParams.set("utm_medium", "owned");
+  url.searchParams.set("utm_campaign", "conversion");
+  url.searchParams.set("utm_content", content);
+  return url.toString();
+}
+
+function setLinkState(link, href) {
+  if (href) {
+    link.href = href;
+    link.setAttribute("aria-disabled", "false");
+    return;
+  }
+  link.removeAttribute("href");
+  link.setAttribute("aria-disabled", "true");
+}
+
+function currentReportSignature() {
+  return JSON.stringify({
+    conversation: conversationInput.value.trim(),
+    relationship: relationshipInput.value,
+    goal: goalInput.value,
+    situation: situationInput.value.trim(),
+    feeling: feelingInput.value.trim(),
+    need: needInput.value.trim(),
+    request: requestInput.value.trim(),
+    sourceContext: sourceContext.value.trim(),
+    reviewDate: reviewDate.value,
+    humanReviewer: humanReviewer.value.trim(),
+    intendedUse: intendedUse.value.trim(),
+    reviewNotes: reviewNotes.value.trim(),
+    guidedScope: guidedScope.value.trim(),
+    safetyConfirmed: safetyConfirmed.checked,
+  });
+}
+
+function reportIsCurrent() {
+  return Boolean(lastReport) && lastReportSignature === currentReportSignature();
+}
+
+function guidedScopeReady() {
+  return guidedScope.value.trim().length >= 40;
+}
+
+function qualifiedReportReady() {
+  const today = new Date().toISOString().slice(0, 10);
+  return reportIsCurrent()
+    && !lastReportIsDemo
+    && !lastReportHasSafetySignals
+    && reviewForm.checkValidity()
+    && reviewDate.value <= today;
+}
+
+function updatePaymentGate() {
+  const resetReady = qualifiedReportReady();
+  const reviewReady = resetReady && guidedScopeReady();
+  setLinkState(checkoutReset, resetReady ? checkoutUrl("repairtalkai", "qualified_reset_report") : "");
+  setLinkState(paypalReset, resetReady ? PAYPAL_RESET_URL : "");
+  setLinkState(checkoutReview, reviewReady ? checkoutUrl("repairtalkreview", "qualified_guided_report") : "");
+  setLinkState(paypalReview, reviewReady ? PAYPAL_REVIEW_URL : "");
+  paymentStatus.textContent = lastReportHasSafetySignals
+    ? "Possible safety-related language was detected. Paid repair packs stay unavailable; do not use this tool to plan a confrontation."
+    : resetReady
+      ? reviewReady
+        ? "The current reviewed reflection qualifies for both packs. Recheck context and safety before paying or sending anything."
+        : "The current reviewed reflection qualifies for $19. Add a guided-review scope and regenerate to qualify for $49."
+      : "Prepare a current non-demo reflection report with human context and safety review before payment links become available.";
 }
 
 function renderPatterns(analysis) {
@@ -155,6 +245,12 @@ function paidPackText() {
     `RepairTalkAI paid download: ${packName}`,
     "Generated locally in this browser from the current reflection report. The license check sends only an activation code and product name. Conversation text, report matches, draft wording, and safety notes stay on this device unless you choose to share them.",
     "Input source: Your current conversation and reflection fields (not the built-in demo).",
+    `Source and permission: ${sourceContext.value.trim()}`,
+    `Review date: ${reviewDate.value}`,
+    `Human reviewer: ${humanReviewer.value.trim()}`,
+    `Intended use: ${intendedUse.value.trim()}`,
+    `Context, limitations, and safety notes: ${reviewNotes.value.trim()}`,
+    `Guided review scope: ${guidedScope.value.trim() || "Not requested"}`,
     "",
     lastReport || "Generate a reflection before using this workbook.",
     "",
@@ -168,18 +264,25 @@ function paidPackText() {
 }
 
 function updatePaidDownloadState(message) {
-  if (downloadPack) downloadPack.disabled = !paidPackActive || !lastReport || lastReportIsDemo;
+  const tierReady = paidPackEntitlement !== "guided_repair_review_pack" || guidedScopeReady();
+  if (downloadPack) downloadPack.disabled = !paidPackActive || !qualifiedReportReady() || !tierReady;
   if (proStatus && message) proStatus.textContent = message;
 }
 
 function invalidateReport(message = "Reflection inputs changed. Run the reflection again before copying or downloading.") {
-  if (!lastReport) return;
+  if (!lastReport) {
+    updatePaymentGate();
+    return;
+  }
   lastReport = "";
   lastReportIsDemo = false;
+  lastReportHasSafetySignals = false;
+  lastReportSignature = "";
   reportPanel.hidden = true;
   copyButton.disabled = true;
   downloadButton.disabled = true;
   reportStatus.textContent = message;
+  updatePaymentGate();
   updatePaidDownloadState(
     paidPackActive
       ? "Reflection inputs changed. Generate a new reflection before downloading the paid pack."
@@ -220,11 +323,10 @@ async function verifyPaidPackCode(rawCode, { quiet = false } = {}) {
       return false;
     }
     localStorage.setItem(STORAGE_KEY, code);
-    const ready = lastReportIsDemo
-      ? "Activation verified. The demo is for preview only; use your own conversation and generate again before downloading."
-      : lastReport
-        ? "Activation verified. Download your paid pack when ready."
-        : "Activation verified. Generate a reflection, then download your paid pack.";
+    const tierReady = product.entitlement !== "guided_repair_review_pack" || guidedScopeReady();
+    const ready = qualifiedReportReady() && tierReady
+      ? "Activation verified. Download your paid pack when ready."
+      : "Activation verified. Generate a current qualified reflection for this pack before downloading.";
     setPaidPackActive(true, ready, product.entitlement);
     return true;
   } catch {
@@ -238,12 +340,12 @@ function downloadPaidPack() {
     setPaidPackActive(false, "Activate a repair pack before downloading.");
     return;
   }
-  if (!lastReport) {
-    updatePaidDownloadState("Generate a reflection before downloading the paid pack.");
+  if (!qualifiedReportReady()) {
+    updatePaidDownloadState("Generate the current qualified reflection before downloading the paid pack.");
     return;
   }
-  if (lastReportIsDemo) {
-    updatePaidDownloadState("The demo is for preview only. Edit the fields with your own conversation and generate a new reflection before downloading a paid pack.");
+  if (paidPackEntitlement === "guided_repair_review_pack" && !guidedScopeReady()) {
+    updatePaidDownloadState("Add the current guided-review scope and regenerate before downloading the $49 pack.");
     return;
   }
   const url = URL.createObjectURL(new Blob([paidPackText()], { type: "text/plain;charset=utf-8" }));
@@ -281,6 +383,8 @@ function renderReport(analysis, { isDemo = false } = {}) {
   repairDraft.textContent = draft;
   lastReport = buildTextReport(analysis, draft);
   lastReportIsDemo = isDemo;
+  lastReportHasSafetySignals = analysis.safetySignals.length > 0;
+  lastReportSignature = currentReportSignature();
   copyButton.disabled = false;
   downloadButton.disabled = false;
   updatePaidDownloadState(
@@ -290,6 +394,7 @@ function renderReport(analysis, { isDemo = false } = {}) {
         ? "Reflection ready. Download your paid pack when ready."
         : "Reflection ready. Enter an RT- or RR- code to unlock a paid pack.",
   );
+  updatePaymentGate();
   reportPanel.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
@@ -332,9 +437,15 @@ clearButton.addEventListener("click", () => {
   downloadButton.disabled = true;
   lastReport = "";
   lastReportIsDemo = false;
+  lastReportHasSafetySignals = false;
+  lastReportSignature = "";
   demoInputsLoaded = false;
   updatePaidDownloadState(paidPackActive ? "Generate a reflection before downloading the paid pack." : "Generate a reflection, then enter the code from your PayPal confirmation.");
+  updatePaymentGate();
 });
+
+reviewForm.addEventListener("input", () => invalidateReport("Review inputs changed. Generate a new reflection before copying, downloading, or paying."));
+reviewForm.addEventListener("change", () => invalidateReport("Review inputs changed. Generate a new reflection before copying, downloading, or paying."));
 
 copyButton.addEventListener("click", async () => {
   if (!lastReport) return;
@@ -362,3 +473,6 @@ if (savedCode) {
   proCode.value = savedCode;
   verifyPaidPackCode(savedCode, { quiet: true });
 }
+
+reviewDate.max = new Date().toISOString().slice(0, 10);
+updatePaymentGate();

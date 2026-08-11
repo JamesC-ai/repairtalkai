@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { readFile, readdir } from "node:fs/promises";
 import test from "node:test";
 import { analyzeConversation, makeRepairDraft, parseConversation } from "../public/conversation-engine.js";
 
@@ -102,12 +102,16 @@ test("build includes product, boundaries, legal pages, and sitemap", async () =>
   assert.match(privacy, /not uploaded/i);
   assert.match(terms, /not therapy, mediation, or a safety assessment/i);
   assert.match(support, /Formatting a conversation/);
-  assert.match(support, /product=repairtalkai&amp;utm_source=repairtalkai&amp;utm_medium=owned&amp;utm_campaign=conversion&amp;utm_content=support_reset/);
-  assert.match(support, /product=repairtalkreview&amp;utm_source=repairtalkai&amp;utm_medium=owned&amp;utm_campaign=conversion&amp;utm_content=support_review/);
-  assert.match(home, /https:\/\/namebatch\.pagecheckai\.com\/api\/checkout\?v=repairtalk-20260731&amp;product=repairtalkai&amp;utm_source=repairtalkai&amp;utm_medium=owned&amp;utm_campaign=conversion&amp;utm_content=home_reset/);
-  assert.match(home, /https:\/\/namebatch\.pagecheckai\.com\/api\/checkout\?v=repairtalk-20260731&amp;product=repairtalkreview&amp;utm_source=repairtalkai&amp;utm_medium=owned&amp;utm_campaign=conversion&amp;utm_content=home_review/);
-  assert.match(home, /https:\/\/www\.paypal\.com\/ncp\/payment\/QXL7YCNJWK6WU/);
-  assert.match(home, /https:\/\/www\.paypal\.com\/ncp\/payment\/5DN49T6JSRJF6/);
+  assert.match(support, /Prepare the free current reflection report before payment/);
+  assert.match(home, /id="checkoutReset"[^>]*aria-disabled="true"/);
+  assert.match(home, /id="checkoutReview"[^>]*aria-disabled="true"/);
+  assert.match(home, /id="sourceContext"[^>]*minlength="30"[^>]*required/);
+  assert.match(home, /id="reviewDate"[^>]*required/);
+  assert.match(home, /id="humanReviewer"[^>]*minlength="3"[^>]*required/);
+  assert.match(home, /id="intendedUse"[^>]*minlength="20"[^>]*required/);
+  assert.match(home, /id="reviewNotes"[^>]*minlength="80"[^>]*required/);
+  assert.match(home, /id="safetyConfirmed"[^>]*required/);
+  assert.doesNotMatch(`${home}\n${support}`, /namebatch\.pagecheckai\.com\/api\/checkout|paypal\.com\/ncp\/payment/);
   assert.match(home, /Enter an RT- or RR- code/);
   assert.match(home, /After payment, enter the RT- or RR- activation code here/);
   assert.match(home, /open support/);
@@ -149,12 +153,17 @@ test("paid pack activation stays product-scoped and browser-local", async () => 
   assert.match(app, /JSON\.stringify\(\{ code, product: product\.product \}\)/);
   assert.match(app, /Generated locally in this browser/);
   assert.match(app, /function invalidateReport/);
+  assert.match(app, /function currentReportSignature/);
+  assert.match(app, /function qualifiedReportReady/);
+  assert.match(app, /function updatePaymentGate/);
+  assert.match(app, /qualified_reset_report/);
+  assert.match(app, /qualified_guided_report/);
+  assert.match(app, /!lastReportHasSafetySignals/);
   assert.match(app, /form\.addEventListener\("input", \(\) => \{/);
   assert.match(app, /Reflection inputs changed\. Generate a new reflection before downloading the paid pack/);
   assert.match(app, /Demo conversation loaded\. Run the reflection again before copying or downloading/);
-  assert.match(app, /downloadPack\.disabled = !paidPackActive \|\| !lastReport \|\| lastReportIsDemo/);
-  assert.match(app, /The demo is for preview only\. Edit the fields with your own conversation/);
-  assert.match(app, /Activation verified\. The demo is for preview only; use your own conversation/);
+  assert.match(app, /downloadPack\.disabled = !paidPackActive \|\| !qualifiedReportReady\(\) \|\| !tierReady/);
+  assert.match(app, /Possible safety-related language was detected\. Paid repair packs stay unavailable/);
   assert.match(app, /Input source: Your current conversation and reflection fields \(not the built-in demo\)/);
   assert.match(app, /renderReport\(analyzeConversation\(source\), \{ isDemo: demoInputsLoaded \}\)/);
   assert.match(app, /demoInputsLoaded = false;\s+invalidateReport\(\)/);
@@ -233,13 +242,23 @@ test("renders all reflection pages with privacy and safety boundaries", async ()
     assert.match(html, /RepairTalkAI/);
     assert.match(html, /Remove names and identifying details/);
     assert.match(html, /When a paid repair pack is worth it/);
-    assert.match(html, /Buy the \$19 Conversation Reset Pack only when/);
+    assert.match(html, /Review paid-pack boundaries in the analyzer only after/);
     assert.match(html, /Skip payment if you need therapy/);
     assert.match(html, /Do not send a repair script if doing so could increase danger or retaliation/);
     assert.match(html, /not therapy, mediation, abuse diagnosis, legal advice, or a safety assessment/);
     assert.match(html, /not proof that a situation is safe/);
-    assert.match(html, new RegExp(`product=repairtalkai&amp;utm_source=repairtalkai&amp;utm_medium=owned&amp;utm_campaign=conversion&amp;utm_content=seo_${route}_reset`));
-    assert.match(html, new RegExp(`product=repairtalkreview&amp;utm_source=repairtalkai&amp;utm_medium=owned&amp;utm_campaign=conversion&amp;utm_content=seo_${route}_review`));
+    assert.match(html, new RegExp(`utm_content=seo_${route}_free_reflection#reflection`));
+    assert.doesNotMatch(html, /namebatch\.pagecheckai\.com\/api\/checkout|paypal\.com\/ncp\/payment/);
+  }
+});
+
+test("all static HTML stays free-first without direct payment destinations", async () => {
+  const files = await readdir("dist", { recursive: true });
+  const htmlFiles = files.filter((file) => file.endsWith(".html"));
+  assert.ok(htmlFiles.length >= 79);
+  for (const file of htmlFiles) {
+    const html = await readFile(`dist/${file}`, "utf8");
+    assert.doesNotMatch(html, /namebatch\.pagecheckai\.com\/api\/checkout|paypal\.com\/ncp\/payment/, file);
   }
 });
 

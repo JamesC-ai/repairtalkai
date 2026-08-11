@@ -100,6 +100,12 @@ input:focus, select:focus, textarea:focus { outline: 3px solid rgba(228,104,85,.
 .select-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .form-actions { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
 .local-note { color: var(--muted); font-size: 12px; text-align: center; }
+.review-panel { margin-top: 28px; padding: 28px; border: 1px solid var(--line); background: var(--white); box-shadow: var(--shadow); }
+.review-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.review-panel textarea { min-height: 110px; }
+.check-label { grid-template-columns: 20px 1fr; align-items: start; line-height: 1.45; }
+.check-label input { width: 18px; height: 18px; margin-top: 2px; }
+[aria-disabled="true"] { pointer-events: none; opacity: .45; cursor: not-allowed; }
 
 .report-panel { margin-top: 28px; padding: 34px; border: 1px solid var(--line); background: var(--white); box-shadow: var(--shadow); scroll-margin-top: 20px; }
 .report-head p:last-child { color: var(--muted); }
@@ -185,6 +191,7 @@ footer a { margin-left: 14px; }
   .hero h1 { font-size: 40px; }
   .tool-heading, .reflection-form, .boundary-band, .offer-band, .buyer-band, .activation-band, .guide-band, .report-grid { grid-template-columns: 1fr; }
   .buyer-grid { grid-template-columns: 1fr; }
+  .review-grid { grid-template-columns: 1fr; }
   .tool-heading, .boundary-band { gap: 24px; }
   .input-panel { border-right: 0; border-bottom: 1px solid var(--line); }
 }
@@ -192,7 +199,7 @@ footer a { margin-left: 14px; }
 @media (max-width: 560px) {
   .tool-band, .boundary-band, .offer-band, .buyer-band, .activation-band, .guide-band { padding-left: 16px; padding-right: 16px; }
   .trust-strip { grid-template-columns: 1fr 1fr; }
-  .input-panel, .draft-panel, .report-panel { padding: 18px; }
+  .input-panel, .draft-panel, .report-panel, .review-panel { padding: 18px; }
   .select-row, .report-summary { grid-template-columns: 1fr; }
   .report-summary div + div { border-left: 0; border-top: 1px solid var(--line); }
   .line-row { grid-template-columns: 1fr; gap: 6px; }

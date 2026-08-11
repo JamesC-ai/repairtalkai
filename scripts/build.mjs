@@ -1,17 +1,6 @@
 import { cp, mkdir, rm, writeFile } from "node:fs/promises";
 
 const siteUrl = "https://repair.pagecheckai.com";
-const resetPaymentUrl = "https://namebatch.pagecheckai.com/api/checkout?v=repairtalk-20260731&product=repairtalkai";
-const reviewPaymentUrl = "https://namebatch.pagecheckai.com/api/checkout?v=repairtalk-20260731&product=repairtalkreview";
-
-function checkoutUrlFor(paymentUrl, content) {
-  const url = new URL(paymentUrl);
-  url.searchParams.set("utm_source", "repairtalkai");
-  url.searchParams.set("utm_medium", "owned");
-  url.searchParams.set("utm_campaign", "conversion");
-  url.searchParams.set("utm_content", content);
-  return url.toString().replaceAll("&", "&amp;");
-}
 
 const pages = [
   {
@@ -579,13 +568,9 @@ function pageHtml(page) {
         <li>Edit the draft so it reflects your own experience and one doable request.</li>
         <li>Do not send a repair script if doing so could increase danger or retaliation.</li>
       </ol>
-      <p><a class="primary-button" href="/#reflection">Run a private reflection</a></p>
-      <p>
-        <a class="primary-button" href="${checkoutUrlFor(resetPaymentUrl, `seo_${page.slug}_reset`)}">Buy $19 Conversation Reset Pack</a>
-        <a class="secondary-button" href="${checkoutUrlFor(reviewPaymentUrl, `seo_${page.slug}_review`)}">Buy $49 Guided Repair Review</a>
-      </p>
+      <p><a class="primary-button" href="/?utm_source=repairtalkai&amp;utm_medium=owned&amp;utm_campaign=conversion&amp;utm_content=seo_${page.slug}_free_reflection#reflection">Run a free current reflection</a></p>
       <h2>When a paid repair pack is worth it</h2>
-      <p>Use the free reflection first. Buy the $19 Conversation Reset Pack only when it produces a draft worth refining and you want two calmer wording options, a pause plan, and a one-page next-conversation checklist. Choose the $49 Guided Repair Review only when you need a deeper browser-local workbook and neutral rewrite options. Skip payment if you need therapy, mediation, abuse diagnosis, legal advice, HR strategy, urgent safety support, coercion support, or a safety assessment.</p>
+      <p>Use the free current reflection first. Review paid-pack boundaries in the analyzer only after a named person has checked the source permission, intended use, missing context, privacy, and safety limits. The $49 option also needs a defined guided-review scope. Skip payment if you need therapy, mediation, abuse diagnosis, legal advice, HR strategy, urgent safety support, coercion support, or a safety assessment.</p>
       <h2>Boundary</h2>
       <p>RepairTalkAI is a wording aid, not therapy, mediation, abuse diagnosis, legal advice, or a safety assessment. A missing safety phrase is not proof that a situation is safe.</p>
       <p><a href="/support.html">Support</a> · <a href="https://tools.pagecheckai.com">More PageCheckAI tools</a></p>

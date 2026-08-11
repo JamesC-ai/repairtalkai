@@ -97,6 +97,34 @@
           </section>
         </form>
 
+        <form class="review-panel" id="reviewForm">
+          <div class="section-title"><span>03</span><div><h3>Record the current human review</h3><p>The free reflection works without this record. Complete it only before considering a paid pack.</p></div></div>
+          <div class="review-grid">
+            <label>Conversation source and permission
+              <input id="sourceContext" type="text" minlength="30" placeholder="Example: my own paraphrased notes with names and private details removed" required />
+            </label>
+            <label>Review date
+              <input id="reviewDate" type="date" required />
+            </label>
+            <label>Human reviewer
+              <input id="humanReviewer" type="text" minlength="3" placeholder="Person checking the wording and context" required />
+            </label>
+            <label>Intended use
+              <input id="intendedUse" type="text" minlength="20" placeholder="Private draft, personal reflection, or qualified-professional handoff" required />
+            </label>
+          </div>
+          <label>Current context, limitations, and safety notes
+            <textarea id="reviewNotes" rows="5" minlength="80" placeholder="Record missing context, what was paraphrased, whether sending could add pressure, and which legal, HR, clinical, emergency, or safety questions remain outside this tool." required></textarea>
+          </label>
+          <label>Guided review scope for the $49 tier
+            <textarea id="guidedScope" rows="3" minlength="40" placeholder="Optional for free and $19. Define the rewrite set, follow-up plan, and human-review handoff."></textarea>
+          </label>
+          <label class="check-label">
+            <input id="safetyConfirmed" type="checkbox" required />
+            I have permission to use this text, removed unnecessary private details, understand that no detected phrase proves safety, and will not use a repair script to confront someone if harm, retaliation, surveillance, coercion, or pressure is a concern.
+          </label>
+        </form>
+
         <section class="report-panel" id="reportPanel" hidden>
           <div class="report-head">
             <div><p class="eyebrow">Conversation reflection</p><h2>Signals to review, not labels to accept blindly.</h2><p id="reportStatus" aria-live="polite">Paste a conversation to begin.</p></div>
@@ -137,14 +165,14 @@
         <article>
           <span class="price">$19</span><h3>Conversation Reset Pack</h3>
           <p>A clean pattern summary, two repair-draft options, a pause plan, and a one-page next-conversation checklist.</p>
-          <a class="primary-button" href="https://namebatch.pagecheckai.com/api/checkout?v=repairtalk-20260731&amp;product=repairtalkai&amp;utm_source=repairtalkai&amp;utm_medium=owned&amp;utm_campaign=conversion&amp;utm_content=home_reset">Buy Conversation Reset Pack</a>
-          <p class="fallback-note">PayPal fallback: <a href="https://www.paypal.com/ncp/payment/QXL7YCNJWK6WU">QXL7YCNJWK6WU</a></p>
+          <a class="primary-button" id="checkoutReset" aria-disabled="true">Buy Conversation Reset Pack</a>
+          <p class="fallback-note"><a id="paypalReset" aria-disabled="true">PayPal fallback</a></p>
         </article>
         <article>
           <span class="price">$49</span><h3>Guided Repair Review</h3>
           <p>A browser-local guided review workbook with neutral rewrite options, safety-boundary prompts, and a practical follow-up plan.</p>
-          <a class="secondary-button" href="https://namebatch.pagecheckai.com/api/checkout?v=repairtalk-20260731&amp;product=repairtalkreview&amp;utm_source=repairtalkai&amp;utm_medium=owned&amp;utm_campaign=conversion&amp;utm_content=home_review">Buy Guided Repair Review</a>
-          <p class="fallback-note">PayPal fallback: <a href="https://www.paypal.com/ncp/payment/5DN49T6JSRJF6">5DN49T6JSRJF6</a></p>
+          <a class="secondary-button" id="checkoutReview" aria-disabled="true">Buy Guided Repair Review</a>
+          <p class="fallback-note"><a id="paypalReview" aria-disabled="true">PayPal fallback</a></p>
         </article>
       </section>
 
@@ -197,6 +225,7 @@
             <button class="secondary-button" id="downloadPack" type="button" disabled>Download paid pack</button>
           </div>
           <p id="proStatus" aria-live="polite">Generate a reflection, then enter the code from your PayPal confirmation.</p>
+          <p id="paymentStatus" aria-live="polite">Prepare a current non-demo reflection report with human context and safety review before payment links become available.</p>
           <p class="activation-help">After payment, enter the RT- or RR- activation code here. If you used a PayPal fallback, <a href="/support.html">open support</a> with the receipt.</p>
         </div>
       </section>
