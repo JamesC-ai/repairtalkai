@@ -167,6 +167,13 @@ test("paid pack activation stays product-scoped and browser-local", async () => 
   assert.match(app, /Input source: Your current conversation and reflection fields \(not the built-in demo\)/);
   assert.match(app, /renderReport\(analyzeConversation\(source\), \{ isDemo: demoInputsLoaded \}\)/);
   assert.match(app, /demoInputsLoaded = false;\s+invalidateReport\(\)/);
+  assert.match(app, /function downloadTextFile/);
+  assert.match(app, /window\.setTimeout\(\(\) => URL\.revokeObjectURL\(url\), 1000\)/);
+  assert.match(app, /Paid repair pack download started\. Wait for your browser to confirm the file\./);
+  assert.match(app, /Your current qualified reflection and activation are still available; try again\./);
+  assert.match(app, /started \? "Download started" : "Retry download"/);
+  assert.doesNotMatch(app, /Paid pack downloaded locally\./);
+  assert.doesNotMatch(app, /link\.click\(\);\s*URL\.revokeObjectURL\(url\);/);
 });
 
 test("new repair pages preserve safety and scope boundaries", async () => {

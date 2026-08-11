@@ -348,15 +348,30 @@ function downloadPaidPack() {
     updatePaidDownloadState("Add the current guided-review scope and regenerate before downloading the $49 pack.");
     return;
   }
-  const url = URL.createObjectURL(new Blob([paidPackText()], { type: "text/plain;charset=utf-8" }));
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = paidPackEntitlement === "guided_repair_review_pack"
+  const filename = paidPackEntitlement === "guided_repair_review_pack"
     ? "repairtalkai-guided-repair-review.txt"
     : "repairtalkai-conversation-reset-pack.txt";
-  link.click();
-  URL.revokeObjectURL(url);
-  updatePaidDownloadState("Paid pack downloaded locally.");
+  if (downloadTextFile(paidPackText(), filename)) {
+    updatePaidDownloadState("Paid repair pack download started. Wait for your browser to confirm the file.");
+    return;
+  }
+  updatePaidDownloadState("Paid repair pack download could not start. Your current qualified reflection and activation are still available; try again.");
+}
+
+function downloadTextFile(text, filename) {
+  try {
+    const url = URL.createObjectURL(new Blob([text], { type: "text/plain;charset=utf-8" }));
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    document.body.append(link);
+    link.click();
+    link.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 function renderReport(analysis, { isDemo = false } = {}) {
@@ -458,12 +473,11 @@ copyButton.addEventListener("click", async () => {
 
 downloadButton.addEventListener("click", () => {
   if (!lastReport) return;
-  const url = URL.createObjectURL(new Blob([lastReport], { type: "text/plain;charset=utf-8" }));
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = "repairtalkai-conversation-reflection.txt";
-  link.click();
-  URL.revokeObjectURL(url);
+  const started = downloadTextFile(lastReport, "repairtalkai-conversation-reflection.txt");
+  downloadButton.textContent = started ? "Download started" : "Retry download";
+  window.setTimeout(() => {
+    downloadButton.textContent = "Download TXT";
+  }, 1200);
 });
 activatePack?.addEventListener("click", () => verifyPaidPackCode(proCode.value));
 downloadPack?.addEventListener("click", downloadPaidPack);
