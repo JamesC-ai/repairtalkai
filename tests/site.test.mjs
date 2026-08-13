@@ -103,6 +103,8 @@ test("build includes product, boundaries, legal pages, and sitemap", async () =>
   assert.match(terms, /not therapy, mediation, or a safety assessment/i);
   assert.match(support, /Formatting a conversation/);
   assert.match(support, /Prepare the free current reflection report before payment/);
+  assert.match(support, /mailto:support@pagecheckai\.com\?subject=RepairTalkAI%20support/);
+  assert.match(support, /Do not email conversation transcripts, screenshots, names, addresses/);
   assert.match(home, /id="checkoutReset"[^>]*aria-disabled="true"/);
   assert.match(home, /id="checkoutReview"[^>]*aria-disabled="true"/);
   assert.match(home, /id="sourceContext"[^>]*minlength="30"[^>]*required/);

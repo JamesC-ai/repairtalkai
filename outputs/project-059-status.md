@@ -16,8 +16,9 @@
   - Separate safety-language branch live
   - Editable observation/feeling/need/request repair draft live
   - TXT export and copyable report live
-  - 45 SEO pages plus privacy, terms, support, robots, and sitemap live
+  - 75 SEO pages plus privacy, terms, support, robots, and a 79-URL sitemap live
   - Cloudflare custom domain active
-  - IndexNow submitted 49 URLs; the latest submission returned 200 OK
+  - IndexNow submitted 79 URLs; the latest submission returned 200 OK
   - Both PayPal payment links live with shipping-address collection disabled
+  - Support email entry point live with de-identified minimum-disclosure guidance
   - Latest expansion covers difficult texts before sending, sarcastic-comment repair, misunderstood messages, recurring lateness, shared calendars, neighbor noise, client boundaries, manager one-on-ones, friendship jealousy, and family event planning
