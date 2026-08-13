@@ -573,6 +573,7 @@ function pageHtml(page) {
       <p>Use the free current reflection first. Review paid-pack boundaries in the analyzer only after a named person has checked the source permission, intended use, missing context, privacy, and safety limits. The $49 option also needs a defined guided-review scope. Skip payment if you need therapy, mediation, abuse diagnosis, legal advice, HR strategy, urgent safety support, coercion support, or a safety assessment.</p>
       <h2>Boundary</h2>
       <p>RepairTalkAI is a wording aid, not therapy, mediation, abuse diagnosis, legal advice, or a safety assessment. A missing safety phrase is not proof that a situation is safe.</p>
+      <p><a class="primary-button" href="/?utm_source=repairtalkai&amp;utm_medium=owned&amp;utm_campaign=conversion&amp;utm_content=seo_${page.slug}_boundary_free_reflection#reflection">Run the free reflection with these boundaries</a></p>
       <p><a href="/support.html">Support</a> · <a href="https://tools.pagecheckai.com">More PageCheckAI tools</a></p>
     </main>
   </body>

@@ -257,6 +257,8 @@ test("renders all reflection pages with privacy and safety boundaries", async ()
     assert.match(html, /not therapy, mediation, abuse diagnosis, legal advice, or a safety assessment/);
     assert.match(html, /not proof that a situation is safe/);
     assert.match(html, new RegExp(`utm_content=seo_${route}_free_reflection#reflection`));
+    assert.match(html, new RegExp(`utm_content=seo_${route}_boundary_free_reflection#reflection`));
+    assert.equal((html.match(/utm_source=repairtalkai/g) || []).length, 2);
     assert.doesNotMatch(html, /namebatch\.pagecheckai\.com\/api\/checkout|paypal\.com\/ncp\/payment/);
   }
 });
