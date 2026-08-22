@@ -153,6 +153,16 @@ test("paid pack activation stays product-scoped and browser-local", async () => 
   assert.match(app, /entitlement: "conversation_reset_pack"/);
   assert.match(app, /entitlement: "guided_repair_review_pack"/);
   assert.match(app, /JSON\.stringify\(\{ code, product: product\.product \}\)/);
+  assert.match(app, /new AbortController\(\)/);
+  assert.match(app, /controller\.abort\(\), 10000/);
+  assert.match(app, /signal: controller\.signal/);
+  assert.match(app, /window\.clearTimeout\(timeout\)/);
+  assert.match(app, /activatePack\.disabled = false/);
+  assert.match(app, /Activation timed out or is temporarily unavailable/);
+  assert.match(app, /if \(!qualifiedReportReady\(\)\) return/);
+  assert.match(app, /if \(!navigator\.clipboard\?\.writeText\) throw new Error\("Clipboard unavailable"\)/);
+  assert.match(app, /Copy failed - retry/);
+  assert.match(app, /copyButton\.disabled = !qualifiedReportReady\(\)/);
   assert.match(app, /Generated locally in this browser/);
   assert.match(app, /function invalidateReport/);
   assert.match(app, /function currentReportSignature/);
