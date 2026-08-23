@@ -528,6 +528,13 @@ const pages = [
     headline: "Pause a conversation without disappearing.",
     intent: "People who need time to regulate during ordinary conflict while keeping safety, emergency, and coercive situations outside the tool.",
   },
+  {
+    slug: "always-initiating-repair-after-conflict-message",
+    title: "Always initiating repair after conflict message",
+    description: "Draft one calm message about repeatedly initiating repair, using observable examples, a specific request, and a no-pressure boundary.",
+    headline: "Name an uneven repair pattern without diagnosing or chasing.",
+    intent: "People in ordinary, non-coercive conflict who want to discuss how repair gets initiated without assigning motives, demanding an immediate response, or sending repeated follow-ups.",
+  },
 ];
 
 function escapeHtml(value) {

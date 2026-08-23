@@ -79,6 +79,7 @@ const seoRoutes = [
   "apology-after-forgetting-task-message",
   "ask-for-clarity-without-blame-message",
   "pause-conversation-when-overwhelmed-message",
+  "always-initiating-repair-after-conflict-message",
 ];
 
 test("build includes product, boundaries, legal pages, and sitemap", async () => {
@@ -138,10 +139,19 @@ test("build includes product, boundaries, legal pages, and sitemap", async () =>
   assert.match(privacy, /does not send conversation text, report matches, draft wording, or safety notes/);
   assert.match(terms, /browser-generated planning files/);
   const sitemapUrls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
-  assert.equal(sitemapUrls.length, 79);
+  assert.equal(sitemapUrls.length, 80);
   for (const route of seoRoutes) {
     assert.ok(sitemapUrls.includes(`https://repair.pagecheckai.com/${route}/`), `missing sitemap route: ${route}`);
   }
+});
+
+test("renders uneven repair effort without diagnosis or pressure", async () => {
+  const html = await readFile("dist/always-initiating-repair-after-conflict-message/index.html", "utf8");
+  assert.match(html, /repeatedly initiating repair/i);
+  assert.match(html, /observable examples, a specific request, and a no-pressure boundary/i);
+  assert.match(html, /without assigning motives, demanding an immediate response, or sending repeated follow-ups/i);
+  assert.match(html, /utm_content=seo_always-initiating-repair-after-conflict-message_free_reflection#reflection/);
+  assert.doesNotMatch(html, /stonewalling|narcissist|emotional abuse|they must respond|send again/i);
 });
 
 test("paid pack activation stays product-scoped and browser-local", async () => {
