@@ -80,6 +80,7 @@ const seoRoutes = [
   "ask-for-clarity-without-blame-message",
   "pause-conversation-when-overwhelmed-message",
   "always-initiating-repair-after-conflict-message",
+  "post-conflict-reconnection-pace-checklist",
 ];
 
 test("build includes product, boundaries, legal pages, and sitemap", async () => {
@@ -139,10 +140,18 @@ test("build includes product, boundaries, legal pages, and sitemap", async () =>
   assert.match(privacy, /does not send conversation text, report matches, draft wording, or safety notes/);
   assert.match(terms, /browser-generated planning files/);
   const sitemapUrls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
-  assert.equal(sitemapUrls.length, 80);
+  assert.equal(sitemapUrls.length, 81);
   for (const route of seoRoutes) {
     assert.ok(sitemapUrls.includes(`https://repair.pagecheckai.com/${route}/`), `missing sitemap route: ${route}`);
   }
+});
+
+test("renders post-conflict reconnection pace without implying consent or reconciliation", async () => {
+  const html = await readFile("dist/post-conflict-reconnection-pace-checklist/index.html", "utf8");
+  assert.match(html, /willingness to talk, a return window, text or in-person preference, and a pause option/i);
+  assert.match(html, /silence, a reply, a meeting, physical affection, or resumed routine does not prove agreement, forgiveness, or reconciliation/i);
+  assert.match(html, /without pressure, repeated follow-ups, diagnosis, or a required outcome/i);
+  assert.match(html, /utm_content=seo_post-conflict-reconnection-pace-checklist_free_reflection#reflection/);
 });
 
 test("renders uneven repair effort without diagnosis or pressure", async () => {

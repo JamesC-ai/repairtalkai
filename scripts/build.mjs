@@ -535,6 +535,13 @@ const pages = [
     headline: "Name an uneven repair pattern without diagnosing or chasing.",
     intent: "People in ordinary, non-coercive conflict who want to discuss how repair gets initiated without assigning motives, demanding an immediate response, or sending repeated follow-ups.",
   },
+  {
+    slug: "post-conflict-reconnection-pace-checklist",
+    title: "Post-conflict reconnection pace checklist",
+    description: "Prepare a low-pressure reconnection plan with willingness to talk, a return window, text or in-person preference, and a pause option.",
+    headline: "Agree on the pace of reconnecting after conflict.",
+    intent: "People in ordinary, non-coercive conflict who want to ease back into contact without pressure, repeated follow-ups, diagnosis, or a required outcome. Silence, a reply, a meeting, physical affection, or resumed routine does not prove agreement, forgiveness, or reconciliation.",
+  },
 ];
 
 function escapeHtml(value) {
