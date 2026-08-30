@@ -81,6 +81,7 @@ const seoRoutes = [
   "pause-conversation-when-overwhelmed-message",
   "always-initiating-repair-after-conflict-message",
   "post-conflict-reconnection-pace-checklist",
+  "apology-without-forgiveness-or-reply-pressure-checklist",
 ];
 
 test("build includes product, boundaries, legal pages, and sitemap", async () => {
@@ -140,10 +141,18 @@ test("build includes product, boundaries, legal pages, and sitemap", async () =>
   assert.match(privacy, /does not send conversation text, report matches, draft wording, or safety notes/);
   assert.match(terms, /browser-generated planning files/);
   const sitemapUrls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
-  assert.equal(sitemapUrls.length, 81);
+  assert.equal(sitemapUrls.length, 82);
   for (const route of seoRoutes) {
     assert.ok(sitemapUrls.includes(`https://repair.pagecheckai.com/${route}/`), `missing sitemap route: ${route}`);
   }
+});
+
+test("renders an apology checklist without forgiveness or reply pressure", async () => {
+  const html = await readFile("dist/apology-without-forgiveness-or-reply-pressure-checklist/index.html", "utf8");
+  assert.match(html, /specific action, its impact, and one repair step/i);
+  assert.match(html, /does not ask for forgiveness, reassurance, or a reply/i);
+  assert.match(html, /silence does not prove acceptance, forgiveness, or reconciliation/i);
+  assert.match(html, /do not bypass a block or a no-contact request/i);
 });
 
 test("renders post-conflict reconnection pace without implying consent or reconciliation", async () => {

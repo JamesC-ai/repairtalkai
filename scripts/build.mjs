@@ -542,6 +542,13 @@ const pages = [
     headline: "Agree on the pace of reconnecting after conflict.",
     intent: "People in ordinary, non-coercive conflict who want to ease back into contact without pressure, repeated follow-ups, diagnosis, or a required outcome. Silence, a reply, a meeting, physical affection, or resumed routine does not prove agreement, forgiveness, or reconciliation.",
   },
+  {
+    slug: "apology-without-forgiveness-or-reply-pressure-checklist",
+    title: "Apology without forgiveness or reply pressure checklist",
+    description: "Draft an apology that names the specific action, its impact, and one repair step, then removes pressure for an immediate outcome.",
+    headline: "Apologize without making the other person manage your relief.",
+    intent: "People preparing an ordinary, non-coercive apology that does not ask for forgiveness, reassurance, or a reply. Silence does not prove acceptance, forgiveness, or reconciliation. Do not bypass a block or a no-contact request.",
+  },
 ];
 
 function escapeHtml(value) {
